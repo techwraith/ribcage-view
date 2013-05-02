@@ -1,0 +1,21 @@
+{
+  "name": "ribcage-view",
+  "version": "0.0.1",
+  "description": "A simple base Backbone view class that adds subviews, rendering, and initialization. ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "keywords": [
+    "Backbone",
+    "view",
+    "subview"
+  ],
+  "author": "Techwraith",
+  "license": "MIT",
+  "dependencies": {
+    "backbone": "~1.0.0",
+    "lodash": "~1.2.1"
+  }
+}
