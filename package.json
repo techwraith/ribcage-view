@@ -1,16 +1,17 @@
 {
   "name": "ribcage-view",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simple base Backbone view class that adds subviews, rendering, and initialization. ",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "",
+  "repository": "https://github.com/Techwraith/ribcage-view.git",
   "keywords": [
     "Backbone",
     "view",
-    "subview"
+    "subview",
+    "browserify"
   ],
   "author": "Techwraith",
   "license": "MIT",

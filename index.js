@@ -11,7 +11,7 @@ var Base = Backbone.View.extend({
       this.beforeInit(opts);
     }
 
-    this.template = opts.template;
+    this.template = this.template || opts.template;
 
     if (!this.template) {
       this.template = function () { return ''; };
