@@ -31,13 +31,13 @@ var Base = Backbone.View.extend({
 
 , close: function() {
 
-    this.trigger('beforeClose');
+    if (this.beforeClose) {
+      this.beforeClose();
+    }
 
     this.closeSubviews();
     this.off();
     this.remove();
-
-    this.trigger('afterClose');
 
   }
 
