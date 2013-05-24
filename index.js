@@ -77,6 +77,13 @@ var Base = Backbone.View.extend({
 
   }
 
+, proxy: function (name, view) {
+    var self = this;
+    view.on(name, function () {
+      self.trigger.apply(arguments, self);
+    });
+  }
+
 , eachSubview: function(iterator) {
     _.each(this.subviews, iterator);
   }
