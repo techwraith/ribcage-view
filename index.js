@@ -95,6 +95,14 @@ var Base = Backbone.View.extend({
     this.subviews[view.cid] = view;
     el.append(view.el);
 
+    _.defer(function () {
+      view.trigger('afterAppend');
+    });
+
+    if (view.afterAppend) {
+      view.afterAppend();
+    }
+
   }
 
 , closeSubviews: function() {
