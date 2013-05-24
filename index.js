@@ -80,7 +80,9 @@ var Base = Backbone.View.extend({
 , proxy: function (name, view) {
     var self = this;
     view.on(name, function () {
-      self.trigger.apply(arguments, self);
+      var args = Array.prototype.slice.call(arguments, 0);
+      args.splice(0, 0, name);
+      self.trigger.apply(self, args);
     });
   }
 
