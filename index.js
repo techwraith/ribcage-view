@@ -1,9 +1,5 @@
 var _ = require('lodash')
-  , $ = require('jquery-browserify')
   , Backbone = require('backbone');
-
-Backbone._ = _;
-Backbone.$ = $;
 
 var Base = Backbone.View.extend({
 
