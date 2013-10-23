@@ -55,16 +55,16 @@ var MyView = View.extend({
 // Working with subviews
 var ViewWithSubviews = View.extend({
 
-  beforeRender: function () {
+  afterRender: function () {
     // append a view to this view's $el
     this.myView = new MyView();
     this.appendSubview(myView);
 
     // append a view to a specific place in this $el
-    this.appendSubview(new MyView(), '#put-it-here');
+    this.appendSubview(new MyView(), this.$('#put-it-here'));
 
     // go through all the subviews
-    this.eachSubview: function (function (subview) {
+    this.eachSubview(function (subview) {
       subview.doSomething();
     });
 
