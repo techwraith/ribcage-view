@@ -7,6 +7,15 @@ var Base = Backbone.View.extend({
 
     var tn = this.templateName;
 
+    // if we need to load data before rendering, do it
+    if (typeof this.loadData == 'function') {
+      this._dataLoaded = false
+    }
+    // otherwise, assume we have the data already
+    else {
+      this._dataLoaded = true
+    }
+
     if(this.beforeInit) {
       this.beforeInit(opts);
     }
@@ -44,6 +53,10 @@ var Base = Backbone.View.extend({
 , render: function () {
     var self = this
       , model = this.model;
+
+    if (!this._dataLoaded) {
+      return this.loadData(this.render)
+    }
 
     if (this.beforeRender) {
       this.beforeRender();
