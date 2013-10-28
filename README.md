@@ -78,6 +78,12 @@ var ViewWithSubviews = View.extend({
 
 });
 
+// Extending a custom view
+var Backbone = require('my-backbone')
+  , RibcagedView = require('ribcage-view/extend')(Backbone.View);
+
+// Do things with RibcagedView
+
 ```
 
 ### Install
