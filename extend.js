@@ -54,7 +54,7 @@ Ribcage = {
     var self = this
       , model = this.model;
 
-    if (!this._dataLoaded) {
+    if (!this._dataLoaded && typeof this.loadData == 'function') {
       return this.loadData(this.render)
     }
 
