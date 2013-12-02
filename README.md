@@ -86,6 +86,11 @@ var Backbone = require('my-backbone')
 
 ```
 
+## Gotchas
+
+ 1. When extending `ribcage-view`, do not override the `initialize` method. Override `afterInit` instead. Making this mistake will result in a `loadData is not defined` error.
+ 2. Subviews are closed when their parent is rendered, and will lose their events unless you call `.delegateEvents()` on them in the parent's `afterRender`. See #5.
+
 ### Install
 
 Installing via npm is easy:
