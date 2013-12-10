@@ -39,6 +39,8 @@ Ribcage = {
   }
 
 , close: function() {
+    this.trigger('beforeClose')
+
 
     if (this.beforeClose) {
       this.beforeClose();
