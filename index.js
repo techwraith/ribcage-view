@@ -1,6 +1,10 @@
 var Backbone = require('backbone')
-  , extend = require('./extend');
+  , $ = require('jquery-browserify')
+  , extend = require('./extend')
+  , Base;
 
-var Base = extend(Backbone.View);
+Backbone.$ = $;
+
+Base = extend(Backbone.View);
 
 module.exports = Base;
