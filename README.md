@@ -86,6 +86,16 @@ var Backbone = require('my-backbone')
 
 ```
 
+### Throttling Renders
+
+`ribcage-view` can listen to `transition:start` and `transition:end` events and defer renders until a CSS transition is complete. This is useful when working with [`ribcage-switcher`](https://github.com/Techwraith/ribcage-switcher).
+
+```
+var ThrottledView = View.extend({
+  throttle: true
+});
+```
+
 ### Install
 
 Installing via npm is easy:

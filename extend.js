@@ -22,6 +22,12 @@ Ribcage = {
 
     this.template = this.template || opts.template;
 
+    if(opts.throttle != null)
+      this.throttle = opts.throttle;
+
+    this._transitioning = false;
+    this._dirty = true;
+
     if (!this.template) {
       this.template = function () { return ''; };
     }
@@ -31,7 +37,33 @@ Ribcage = {
     }
 
     this.render();
+  }
 
+  // Should this view queue renders when a transition is running?
+, throttle: false
+
+  // Helpers to bind/unbind transition listeners
+, _bindThrottles: function () {
+    this._unbindThrottles();
+    this.on('transition:start', this._transitionStart);
+    this.on('transition:end', this._transitionEnd);
+  }
+, _unbindThrottles: function () {
+    this.off('transition:start', this._transitionStart);
+    this.off('transition:end', this._transitionEnd);
+  }
+
+  // Stops further render events
+, _transitionStart: function () {
+    this._transitioning = true;
+  }
+
+  // Enables rendering and performs one immediately if dirty
+, _transitionEnd: function () {
+    this._transitioning = false;
+    if(this._dirty) {
+      this.render();
+    }
   }
 
 , context: function () {
@@ -39,6 +71,8 @@ Ribcage = {
   }
 
 , close: function() {
+    this.trigger('beforeClose')
+
 
     if (this.beforeClose) {
       this.beforeClose();
@@ -60,6 +94,13 @@ Ribcage = {
         self.render()
       })
     }
+
+    if(this._transitioning) {
+      this._dirty = true;
+      return false;
+    }
+
+    this._dirty = false;
 
     if (this.beforeRender) {
       this.beforeRender();
@@ -87,6 +128,10 @@ Ribcage = {
 
     if (this.afterRender) {
       this.afterRender();
+    }
+
+    if(this.throttle) {
+      this._bindThrottles();
     }
 
     return this;
