@@ -5,6 +5,8 @@ var _ = require('lodash')
 Ribcage = {
   initialize: function (opts) {
 
+    opts = opts || {};
+
     var tn = this.templateName;
 
     // if we need to load data before rendering, do it
