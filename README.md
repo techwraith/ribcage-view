@@ -42,6 +42,11 @@ var MyView = View.extend({
     // define a context for the template
   }
 
+, bindEvents: function () {
+    // gets called before loadData is called in render
+    // useful for listening to model
+  }
+
 , beforeRender: function () {
     // gets called before it's rendered
   }
