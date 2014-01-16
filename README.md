@@ -105,3 +105,26 @@ npm install ribcage-view
 ```
 
 Ribcage requires you to use browserify (or some other way to get require on the front-end).
+
+## Contributing
+
+### Developing
+
+Run this command to run tests at `http://localhost:9999`.
+
+```sh
+# grunt dev
+```
+
+### Testing
+
+Tests can be run on Saucelabs.
+
+```sh
+# Run once to set up login info
+$ export SAUCE_USERNAME=YOUR-SAUCE-USERNAME
+$ export SAUCE_ACCESS_KEY=YOUR-SAUCE-API-KEY
+
+# Run to test on sauce
+$ grunt test
+```

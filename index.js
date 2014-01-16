@@ -1,5 +1,5 @@
 var Backbone = require('backbone')
-  , $ = require('jquery-browserify')
+  , $ = require('jquery')(window)
   , extend = require('./extend')
   , Base;
 
