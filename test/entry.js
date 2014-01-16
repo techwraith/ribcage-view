@@ -4,12 +4,13 @@ var assert = require('assert')
   , View = require('../index')
   , fixture = document.getElementById('fixture')
   , CollectionView = require('./fixtures/CollectionView')
+  , ButtonHolderView = require('./fixtures/ButtonHolderView')
   , instances = {}; // A temporary holder that we can `delete` to clear leaks
 
 mocha.setup({
   ui: 'bdd',
   globals: []
-}).timeout(1500);
+}).timeout(10000);
 
 describe('A Simple View', function () {
   it('should not throw when initialized with no options', function () {
@@ -82,8 +83,8 @@ describe('Extended Views', function () {
   });
 });
 
-describe('Manual Tests', function () {
-  describe('Memory Leaks (Dev Tools>Profile)', function () {
+describe('Memory Leaks', function () {
+  describe('CollectionView', function () {
     var cycles = 10
       , collectionsPerCycle = 10
       , itemsPerCollection = 10
@@ -106,6 +107,24 @@ describe('Manual Tests', function () {
         delete instances.collectionInstances;
         delete t.t;
       }
+    });
+  });
+
+  describe('Button Closures', function () {
+    it('1 ButtonHolderView and 1 ButtonView should exist in heap', function () {
+      var buttonHolderReference
+        , buttonAction = function ButtonViewActionClosure () {
+            buttonHolderReference.replaceButton();
+          };
+
+      buttonHolderReference = new ButtonHolderView({
+        buttonAction: buttonAction
+      });
+
+      fixture.appendChild(buttonHolderReference.el);
+
+      for(var i=0, ii=10; i<ii; ++i)
+        buttonHolderReference.replaceButton();
     });
   });
 });
