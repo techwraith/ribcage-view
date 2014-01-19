@@ -1,5 +1,6 @@
 var Backbone = require('backbone')
-  , $ = require('jquery-browserify')
+    // Use the global jQuery if possible -- it might have plugins on it
+  , $ = window.$ ? window.$ : require('jquery')(window)
   , extend = require('./extend')
   , Base;
 
