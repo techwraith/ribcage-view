@@ -142,6 +142,11 @@ Ribcage = {
 , detachSubview: function(view) {
 
     if (this.subviews) {
+
+      if (view && !this.subviews[view.cid]) {
+        throw new Error("View not found in "+this.className+"'s subviews: " + view.className +'\n\n'+ view.model.toJSON())
+      }
+
       delete this.subviews[view.cid];
     }
 
