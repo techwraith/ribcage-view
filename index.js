@@ -1,6 +1,6 @@
 var Backbone = require('backbone')
     // Use the global jQuery if possible -- it might have plugins on it
-  , $ = window.$ ? window.$ : require('jquery')(window)
+  , $ = window.$ ? window.$ : require('jquery')
   , extend = require('./extend')
   , Base;
 

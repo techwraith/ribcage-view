@@ -60,7 +60,7 @@ Ribcage = {
       this.bindEvents()
     }
 
-    if (!this._dataLoaded) {
+    if (!this._dataLoaded && typeof this.loadData == 'function') {
       return this.loadData(function () {
         self._dataLoaded = true
         self.render()
