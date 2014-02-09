@@ -5,6 +5,8 @@ var _ = require('lodash')
 Ribcage = {
   initialize: function (opts) {
 
+    opts = opts || {};
+
     var tn = this.templateName;
 
     // if we need to load data before rendering, do it
@@ -54,8 +56,15 @@ Ribcage = {
     var self = this
       , model = this.model;
 
+    if(typeof this.bindEvents == 'function') {
+      this.bindEvents()
+    }
+
     if (!this._dataLoaded && typeof this.loadData == 'function') {
-      return this.loadData(this.render)
+      return this.loadData(function () {
+        self._dataLoaded = true
+        self.render()
+      })
     }
 
     if (this.beforeRender) {
@@ -133,6 +142,11 @@ Ribcage = {
 , detachSubview: function(view) {
 
     if (this.subviews) {
+
+      if (view && !this.subviews[view.cid]) {
+        throw new Error("View not found in "+this.className+"'s subviews: " + view.className +'\n\n'+ view.model.toJSON())
+      }
+
       delete this.subviews[view.cid];
     }
 

@@ -42,6 +42,11 @@ var MyView = View.extend({
     // define a context for the template
   }
 
+, bindEvents: function () {
+    // gets called before loadData is called in render
+    // useful for listening to model
+  }
+
 , beforeRender: function () {
     // gets called before it's rendered
   }
@@ -85,6 +90,11 @@ var Backbone = require('my-backbone')
 // Do things with RibcagedView
 
 ```
+
+## Gotchas
+
+ 1. Remember to call `__super__.initialize.apply(this, arguments)` if you are override initialize. This fixes the `loadData is not defined` error. Alternatively, override `afterInit` and `beforeInit` instead.
+ 2. Subviews are closed when their parent is rendered, and will lose their events unless you call `.delegateEvents()` on them in the parent's `afterRender`. See #5.
 
 ### Install
 

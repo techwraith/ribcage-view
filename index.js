@@ -1,6 +1,11 @@
 var Backbone = require('backbone')
-  , extend = require('./extend');
+    // Use the global jQuery if possible -- it might have plugins on it
+  , $ = window.$ ? window.$ : require('jquery')(window)
+  , extend = require('./extend')
+  , Base;
 
-var Base = extend(Backbone.View);
+Backbone.$ = $;
+
+Base = extend(Backbone.View);
 
 module.exports = Base;
