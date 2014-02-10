@@ -132,7 +132,7 @@ module.exports = function(grunt) {
           return done(false);
         }
 
-        src = mochaStyle + ';' + src.toString();
+        src = mochaStyle + '\n\n' + src.toString();
 
         fs.writeFile(outputFile, src, function (err) {
           if(err) {
