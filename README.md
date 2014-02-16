@@ -65,6 +65,8 @@ var ViewWithSubviews = View.extend({
     this.myView = new MyView();
     this.appendSubview(myView);
 
+    // note: there is also .prependSubview
+
     // append a view to a specific place in this $el
     this.appendSubview(new MyView(), this.$('#put-it-here'));
 

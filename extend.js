@@ -129,6 +129,23 @@ Ribcage = {
 
   }
 
+, prependSubview: function(view, el) {
+    el || (el = this.$el);
+
+    this.subviews = this.subviews || {};
+    this.subviews[view.cid] = view;
+    el.prepend(view.el);
+
+    _.defer(function () {
+      view.trigger('afterPrepend');
+    });
+
+    if (view.afterPrepend) {
+      view.afterPrepend();
+    }
+
+  }
+
 , closeSubviews: function() {
 
     this.eachSubview(function(subview) {
