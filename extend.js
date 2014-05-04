@@ -112,15 +112,28 @@ Ribcage = {
     _.each(this.subviews, iterator);
   }
 
+, _attachSubView: function(view){
+    this.subviews = this.subviews || {};
+    this.subviewByModelId = this.subviewByModelId || {};
+
+    this.subviews[view.cid] = view;
+    if (view.model) {
+      if (!this.subviewByModelId[view.model.id]) this.subviewByModelId[view.model.id] = [];
+      this.subviewByModelId[view.model.id].push(view);
+    }
+
+    return view;
+  }
+
 , appendSubview: function(view, el) {
     el || (el = this.$el);
 
-    this.subviews = this.subviews || {};
-    this.subviews[view.cid] = view;
+    this._attachSubView(view);
+
     el.append(view.el);
 
     _.defer(function () {
-      view.trigger('afterAppend');
+      view.trigger('afterAppend', view);
     });
 
     if (view.afterAppend) {
@@ -132,12 +145,12 @@ Ribcage = {
 , prependSubview: function(view, el) {
     el || (el = this.$el);
 
-    this.subviews = this.subviews || {};
-    this.subviews[view.cid] = view;
+    this._attachSubView(view);
+
     el.prepend(view.el);
 
     _.defer(function () {
-      view.trigger('afterPrepend');
+      view.trigger('afterPrepend', view);
     });
 
     if (view.afterPrepend) {
@@ -175,6 +188,20 @@ Ribcage = {
 
     view.$el.detach();
 
+  }
+
+, detachSubviewByModelId: function(id){
+    if (this.subviewByModelId){
+      if (!id || !this.subviewByModelId[id]){
+        throw new Error('No views with ' + id + ' model id found in ' + this.className + ' subviews');
+      }
+
+      _.each(this.subviewsByModelId[id], function(view){
+        this.detachSubview(view);
+      });
+
+      delete this.subviewByModelId[id];
+    }
   }
 };
 
