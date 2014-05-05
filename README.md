@@ -82,6 +82,10 @@ var ViewWithSubviews = View.extend({
     this.closeSubviews();
 
   }
+  , afterInit: function(){
+    // this.parent is a reference to the subview's parent view.
+    this.listenTo(this.parent.collection, 'change', this.render)
+  }
 
 });
 

@@ -5,6 +5,7 @@ var assert = require('assert')
   , fixture = document.getElementById('fixture')
   , CollectionView = require('./fixtures/CollectionView')
   , ButtonHolderView = require('./fixtures/ButtonHolderView')
+  , _ = require('lodash')
   , instances = {}; // A temporary holder that we can `delete` to clear leaks
 
 mocha.setup({
@@ -71,6 +72,13 @@ describe('Extended Views', function () {
 
     it('should have 100 children', function () {
       assert.equal(fixture.childNodes[0].childNodes.length, 100);
+    });
+
+    it('should have a reference to its parent view', function(){
+      var subview = _.find(instances.collectionInstance.subviews, function(subview){
+          return subview.cid;
+        });
+      assert.equal( subview.parent.cid,  instances.collectionInstance.cid);
     });
 
     it('should detach when closed', function () {
