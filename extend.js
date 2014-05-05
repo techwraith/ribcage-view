@@ -7,8 +7,6 @@ Ribcage = {
 
     opts = opts || {};
 
-    var tn = this.templateName;
-
     // if we need to load data before rendering, do it
     if (typeof this.loadData == 'function') {
       this._dataLoaded = false
@@ -17,6 +15,9 @@ Ribcage = {
     else {
       this._dataLoaded = true
     }
+
+    // backbone 1.1+ doesn't auto-set this.options
+    this.options = opts
 
     if(this.beforeInit) {
       this.beforeInit(opts);
