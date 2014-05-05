@@ -78,6 +78,15 @@ var ViewWithSubviews = View.extend({
     // detatch a subview
     this.detatchSubview(this.myView);
 
+    // detach all subviews with a specific model
+    this.subModel = new Backbone.Model()
+    this.myModelView = new MyView({
+      model: this.subModel
+    })
+    this.detachSubviewByModel(this.subModel)
+    // or…
+    this.listenTo(this.subModel, 'destroy', this.detachSubviewByModel)
+
     // close all subviews
     this.closeSubviews();
 
