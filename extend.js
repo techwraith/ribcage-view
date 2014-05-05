@@ -113,7 +113,7 @@ Ribcage = {
     _.each(this.subviews, iterator);
   }
 
-, _attachSubView: function(view){
+, _attachSubview: function(view){
     this.subviews = this.subviews || {};
     this.subviewByModelId = this.subviewByModelId || {};
 
@@ -123,13 +123,16 @@ Ribcage = {
       this.subviewByModelId[view.model.id].push(view);
     }
 
+    // let the subview store a reference to its parent
+    view.parent || (view.parent = this)
+
     return view;
   }
 
 , appendSubview: function(view, el) {
     el || (el = this.$el);
 
-    this._attachSubView(view);
+    this._attachSubview(view);
 
     el.append(view.el);
 
@@ -146,7 +149,7 @@ Ribcage = {
 , prependSubview: function(view, el) {
     el || (el = this.$el);
 
-    this._attachSubView(view);
+    this._attachSubview(view);
 
     el.prepend(view.el);
 
