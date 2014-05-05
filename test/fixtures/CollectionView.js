@@ -1,5 +1,7 @@
 var ItemView = require('./ItemView')
   , Ribcage = require('../../index')
+  , Backbone = require('backbone')
+  , _ = require('lodash')
   , CollectionViewExt = Ribcage.extend({
       tagName: 'UL'
     , afterInit: function (options) {
@@ -11,8 +13,21 @@ var ItemView = require('./ItemView')
         this.size = options.size;
       }
     , afterRender: function () {
-        for(var i=0, ii=this.size; i<ii; ++i)
-          this.appendSubview(new ItemView({name: 'View ' + i}), this.$el);
+        var modelOptions;
+
+        if (!this.size) return;
+
+        _.each(_.range(this.size), function(i) {
+          modelOptions = {
+            name: 'View ' + i
+          }
+
+          if (this.options.includeModels){
+            modelOptions.model = new Backbone.Model({id: i});
+          }
+
+          this.appendSubview(new ItemView(modelOptions), this.$el);
+        }, this)
       }
     });
 
