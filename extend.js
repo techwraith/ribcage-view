@@ -197,9 +197,9 @@ Ribcage = {
         throw new Error('No views with ' + id + ' model id found in ' + this.className + ' subviews');
       }
 
-      _.each(this.subviewsByModelId[id], function(view){
+      _.each(this.subviewByModelId[id], function(view){
         this.detachSubview(view);
-      });
+      }, this);
 
       delete this.subviewByModelId[id];
     }

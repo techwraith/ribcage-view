@@ -1,10 +1,11 @@
-/* globals mocha, describe, it, after */
+/* globals mocha, describe, it, after, beforeEach */
 
 var assert = require('assert')
   , View = require('../index')
   , fixture = document.getElementById('fixture')
   , CollectionView = require('./fixtures/CollectionView')
   , ButtonHolderView = require('./fixtures/ButtonHolderView')
+  , _ = require('lodash')
   , instances = {}; // A temporary holder that we can `delete` to clear leaks
 
 mocha.setup({
@@ -81,6 +82,29 @@ describe('Extended Views', function () {
 
     delete instances.collectionInstance;
   });
+});
+
+describe('CollectionView with subviews that have models', function(){
+  var parent
+
+  beforeEach(function(){
+    parent = instances.collectionWithModels = new CollectionView({
+      size: 20
+      , includeModels: true
+    })
+  })
+
+  it('tracks an array of views by model id', function(){
+    assert.ok(_.isPlainObject(parent.subviewByModelId));
+    // we know that there's a mdoel with id `1`
+    assert.ok(_.isArray(parent.subviewByModelId[1]));
+  });
+
+  it('can detach a subview by model', function(){
+    parent.detachSubviewByModel({id: 1});
+
+    assert.equal(parent.subviewByModelId[1], undefined);
+  })
 });
 
 describe('Memory Leaks', function () {
