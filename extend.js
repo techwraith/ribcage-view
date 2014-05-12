@@ -1,4 +1,5 @@
 var _ = require('lodash')
+  , raf = require('raf/polyfill')
   , Ribcage
   , extendView;
 
@@ -160,6 +161,45 @@ Ribcage = {
 
   }
 
+, appendSubviews: function(views, el, callback){
+    el || (el = this.$el);
+
+    var fragment = document.createDocumentFragment();
+
+    _.each(views, function(view){
+      this._attachSubView(view);
+
+      fragment.appendChild(view.el);
+
+      _.defer(function () {
+        view.trigger('afterAppend', view);
+      });
+
+      if (view.afterAppend) {
+        view.afterAppend();
+      }
+    }, this);
+
+    raf.call(window, function(){
+      el[0].appendChild(fragment);
+      callback(views);
+    });
+}
+
+, batchAppendSubviews: function(views, el, batchCount, callback){
+  _.chain(views)
+    .groupBy(function(view, index){
+      return Math.floor(index / batchCount);
+    })
+    .toArray()
+    .each(function(viewBatch){
+      this.appendSubviews(viewBatch, el, function(){
+        callback(viewBatch);
+      });
+    }, this)
+  ;
+}
+
 , closeSubviews: function() {
 
     this.eachSubview(function(subview) {
@@ -176,7 +216,7 @@ Ribcage = {
     if (this.subviews) {
 
       if (view && !this.subviews[view.cid]) {
-        msg = "View not found in "+this.className+"'s subviews: " + view.className
+        msg = 'View not found in ' + this.className + '\'s subviews: ' + view.className
 
         if(view.model)
           msg += '\n\n'+ view.model.toJSON()

@@ -87,6 +87,21 @@ var ViewWithSubviews = View.extend({
     // or…
     this.listenTo(this.subModel, 'destroy', this.detachSubviewByModel)
 
+    // append many subviews at once
+    // e.g. if you want to append a sub view for all models in a collection
+    var collectionSubviews = this.collection.each(function(view){
+      new MyView()
+    })
+    // only the first argument is required
+    this.appendSubviews(collectionSubviews, this.$('.collection'), function(views){
+      // views are rendered after a requestAnimationFrame
+      console.log(assert.deepEqual(views, collectionSubviews))
+    })
+
+    // or, if your subviews take time to render and slow down the DOM
+    // will render 2 subviews at a time.
+    this.batchAppendSubviews(collectionSubviews, 2)
+
     // close all subviews
     this.closeSubviews();
 
