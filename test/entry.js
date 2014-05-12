@@ -104,7 +104,59 @@ describe('CollectionView with subviews that have models', function(){
     parent.detachSubviewByModel({id: 1});
 
     assert.equal(parent.subviewByModelId[1], undefined);
+  });
+});
+
+describe('#appendSubviews', function(){
+  var parent
+    , subviews
+
+  beforeEach(function(){
+    parent = new View()
+    subviews = _.map(_.range(20), function(num){
+      return new View({
+        num: num
+        , tagName: 'li'
+      })
+    })
   })
+
+  it('appends all views', function(done){
+    parent.appendSubviews(subviews, null, function(){
+      assert.equal(parent.$('li').length, 20);
+      done()
+    })
+  });
+});
+
+describe('#batchAppendSubviews', function(){
+  var parent
+    , subviews
+    , batchCount = 10
+    , totalCount = 20
+    ;
+
+  beforeEach(function(){
+    parent = new View()
+    subviews = _.map(_.range(totalCount), function(num){
+      return new View({
+        num: num
+        , tagName: 'li'
+      })
+    })
+  })
+
+  it('appends views in batches', function(done){
+    var end = _.after(totalCount / batchCount, done)
+      , batchIndex = 0
+      ;
+
+    parent.batchAppendSubviews(subviews, null, batchCount, function(){
+      batchIndex++;
+      assert.equal(parent.$('li').length, batchCount * batchIndex);
+      end();
+    })
+  });
 });
 
 describe('Memory Leaks', function () {
