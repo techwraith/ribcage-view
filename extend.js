@@ -34,7 +34,9 @@ Ribcage = {
       this.afterInit(opts);
     }
 
-    this.render();
+    if (!opts.renderOnAppend) {
+      this.render();
+    }
 
   }
 
@@ -132,6 +134,7 @@ Ribcage = {
 
     this._attachSubView(view);
 
+    if (view.options.render) view.render()
     el.append(view.el);
 
     _.defer(function () {
@@ -149,6 +152,7 @@ Ribcage = {
 
     this._attachSubView(view);
 
+    if (view.options.renderOnAppend) view.render()
     el.prepend(view.el);
 
     _.defer(function () {
@@ -169,6 +173,7 @@ Ribcage = {
     _.each(views, function(view){
       this._attachSubView(view);
 
+      if (view.options.renderOnAppend) view.render()
       fragment.appendChild(view.el);
 
       _.defer(function () {
