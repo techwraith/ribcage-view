@@ -104,12 +104,11 @@ Ribcage = {
   }
 
 , proxy: function (name, view) {
-    var self = this;
-    view.on(name, function () {
+    this.listenTo(view, name, function proxiedEventCallback(){
       var args = Array.prototype.slice.call(arguments, 0);
       args.splice(0, 0, name);
-      self.trigger.apply(self, args);
-    });
+      this.trigger.apply(this, args);
+    })
   }
 
 , eachSubview: function(iterator) {
