@@ -187,7 +187,7 @@ Ribcage = {
 
     raf.call(window, function(){
       el[0].appendChild(fragment);
-      callback(views);
+      if (_.isFunction(callback)) callback(views);
     });
 }
 
@@ -199,7 +199,7 @@ Ribcage = {
     .toArray()
     .each(function(viewBatch){
       this.appendSubviews(viewBatch, el, function(){
-        callback(viewBatch);
+        if (_.isFunction(callback)) callback(viewBatch);
       });
     }, this)
   ;
