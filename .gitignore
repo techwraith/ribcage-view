@@ -1,5 +1,6 @@
 node_modules
 node_modules/
 *.log
+.DS_Store
 test/bundle.js
 test/bundle.css
