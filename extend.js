@@ -4,7 +4,7 @@ var _ = require('lodash')
   , extendView;
 
 Ribcage = {
-  initialize: function (opts) {
+  initialize: function (opts){
 
     opts = opts || {};
 
@@ -35,7 +35,6 @@ Ribcage = {
     }
 
     this.render();
-
   }
 
 , context: function () {
@@ -51,7 +50,6 @@ Ribcage = {
     this.closeSubviews();
     this.off();
     this.remove();
-
   }
 
 , render: function () {
@@ -95,7 +93,7 @@ Ribcage = {
     // As soon as the view is bound to DOM, we need to re-delegate and re-render all
     // subviews to keep events intact. -cstumph
     this.delegateEvents()
-    this.eachSubview(function eachSubviewInRender (view){
+    this.eachSubview( function eachSubviewInRender (view){
       view.render()
     })
 
@@ -111,10 +109,9 @@ Ribcage = {
     }
 
     return this;
-
   }
 
-, proxy: function (name, view) {
+, proxy: function (name, view){
     this.listenTo(view, name, function proxiedEventCallback(){
       var args = Array.prototype.slice.call(arguments, 0);
       args.splice(0, 0, name);
@@ -122,11 +119,11 @@ Ribcage = {
     })
   }
 
-, eachSubview: function(iterator) {
+, eachSubview: function (iterator){
     _.each(this.subviews, iterator);
   }
 
-, _attachSubView: function(view){
+, _attachSubView: function (view){
     this.subviews = this.subviews || {};
     this.subviewByModelId = this.subviewByModelId || {};
 
@@ -139,7 +136,7 @@ Ribcage = {
     return view;
   }
 
-, appendSubview: function(view, el) {
+, appendSubview: function (view, el){
     el || (el = this.$el);
 
     this._attachSubView(view);
@@ -147,17 +144,16 @@ Ribcage = {
     if (view.options.render) view.render()
     el.append(view.el);
 
-    _.defer(function () {
+    _.defer(function (){
       view.trigger('afterAppend', view);
     });
 
     if (view.afterAppend) {
       view.afterAppend();
     }
-
   }
 
-, prependSubview: function(view, el) {
+, prependSubview: function (view, el){
     el || (el = this.$el);
 
     this._attachSubView(view);
@@ -172,10 +168,9 @@ Ribcage = {
     if (view.afterPrepend) {
       view.afterPrepend();
     }
-
   }
 
-, appendSubviews: function(views, el, callback){
+, appendSubviews: function (views, el, callback){
     el || (el = this.$el);
 
     var fragment = document.createDocumentFragment();
@@ -199,33 +194,30 @@ Ribcage = {
       el[0].appendChild(fragment);
       if (_.isFunction(callback)) callback(views);
     });
-}
+  }
 
-, batchAppendSubviews: function(views, el, batchCount, callback){
-  _.chain(views)
-    .groupBy(function(view, index){
+, batchAppendSubviews: function (views, el, batchCount, callback){
+    _.chain(views)
+    .groupBy( function (view, index){
       return Math.floor(index / batchCount);
     })
     .toArray()
-    .each(function(viewBatch){
-      this.appendSubviews(viewBatch, el, function(){
+    .each( function (viewBatch){
+      this.appendSubviews(viewBatch, el, function (){
         if (_.isFunction(callback)) callback(viewBatch);
       });
-    }, this)
-  ;
-}
+    }, this);
+  }
 
-, closeSubviews: function() {
-
-    this.eachSubview(function(subview) {
+, closeSubviews: function (){
+    this.eachSubview( function (subview){
       subview.close();
     });
 
     this.subviews = {};
-
   }
 
-, detachSubview: function(view) {
+, detachSubview: function (view){
     var msg
 
     if (this.subviews) {
@@ -243,10 +235,9 @@ Ribcage = {
     }
 
     view.$el.detach();
-
   }
 
-, detachSubviewByModel: function(model){
+, detachSubviewByModel: function (model){
     var id = model.id
     if (this.subviewByModelId){
       if (!id || !this.subviewByModelId[id]){
@@ -260,9 +251,10 @@ Ribcage = {
       delete this.subviewByModelId[id];
     }
   }
-};
 
-extendView = function (view) {
+};//end Ribcage{}
+
+extendView = function (view){
   return view.extend(Ribcage);
 };
 
