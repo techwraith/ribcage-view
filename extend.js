@@ -34,9 +34,7 @@ Ribcage = {
       this.afterInit(opts);
     }
 
-    if (!opts.renderOnAppend) {
-      this.render();
-    }
+    this.render();
 
   }
 
@@ -60,7 +58,13 @@ Ribcage = {
     var self = this
       , model = this.model;
 
-    if(typeof this.bindEvents == 'function') {
+    if(typeof this.bindEvents === 'function') {
+      //Make sure we don't double up on event listeners
+      //You no longer have to manually stop listening on re-render -cstumph
+      _.each(this._listeners, function (emitter){
+        this.stopListening(emitter)
+      }, this)
+
       this.bindEvents()
     }
 
@@ -87,6 +91,13 @@ Ribcage = {
     }
 
     this.$el.html(this.template(model));
+    
+    // As soon as the view is bound to DOM, we need to re-delegate and re-render all
+    // subviews to keep events intact. -cstumph
+    this.delegateEvents()
+    this.eachSubview(function eachSubviewInRender (view){
+      view.render()
+    })
 
     // I'm not happy deferring here, but backbone's
     // event system is based on the DOM, so my hands
