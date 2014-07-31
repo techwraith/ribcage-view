@@ -17,6 +17,9 @@ Ribcage = {
       this._dataLoaded = true
     }
 
+    this._nukeOnRender = opts._nukeOnRender
+    delete opts._nukeOnRender
+
     // backbone 1.1+ doesn't auto-set this.options
     this.options = opts
 
@@ -77,8 +80,12 @@ Ribcage = {
       this.beforeRender();
     }
 
-    this.closeSubviews();
-    this.$el.empty();
+    // Maintainers of legacy code might want to use this
+    // but certainly not YOU, young grasshopper!
+    if (this._nukeOnRender) {
+      this.closeSubviews();
+      this.$el.empty();
+    }
 
     if (this.beforeTemplating) {
       model = this.beforeTemplating();
