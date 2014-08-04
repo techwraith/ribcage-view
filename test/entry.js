@@ -5,6 +5,7 @@ var assert = require('assert')
   , fixture = document.getElementById('fixture')
   , CollectionView = require('./fixtures/CollectionView')
   , ButtonHolderView = require('./fixtures/ButtonHolderView')
+  , EventViews       = require('./fixtures/EventViews')
   , _ = require('lodash')
   , instances = {}; // A temporary holder that we can `delete` to clear leaks
 
@@ -158,6 +159,59 @@ describe('#batchAppendSubviews', function(){
     })
   });
 });
+
+
+describe('Events', function (){
+  it('should have events on the view after first render', function(done){
+    var testView = new EventViews.EventView({})
+    fixture.appendChild(testView.el);
+
+    testView.eSub.clickIt()
+
+    assert.equal(testView.clickCount, 1);
+
+    delete testView
+    done()
+  });
+
+  it('should have events on the subviews constructed in afterInit phase after first render', function(done){
+    var testView = new EventViews.EventView({})
+    fixture.appendChild(testView.el);
+
+    testView.eSub.clickIt()
+
+    assert.equal(testView.eSub.clickCount, 1);
+
+    delete testView
+    done()
+  });
+
+  it('should have events on the view after re-render', function(done){
+    var testView = new EventViews.EventView({})
+    fixture.appendChild(testView.el);
+
+    testView.render()
+    testView.eSub.clickIt()
+
+    assert.equal(testView.clickCount, 1);
+
+    delete testView
+    done()
+  });
+
+  it('should have events on the subview constructed in afterInit phase after first re-render', function(done){
+    var testView = new EventViews.EventView({})
+    fixture.appendChild(testView.el);
+
+    testView.render()
+    testView.eSub.clickIt()
+
+    assert.equal(testView.eSub.clickCount, 1);
+
+    delete testView
+    done()
+  });
+})
 
 describe('Memory Leaks', function () {
   describe('CollectionView', function () {

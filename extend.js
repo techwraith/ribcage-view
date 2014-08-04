@@ -97,7 +97,7 @@ Ribcage = {
 
     this.$el.html(this.template(model));
     
-    // As soon as the view is bound to DOM, we need to re-delegate and re-render all
+    // As soon as the view is bound to DOM, we need to delegate events and re-render all
     // subviews to keep events intact. -cstumph
     this.delegateEvents()
     this.eachSubview( function eachSubviewInRender (view){
