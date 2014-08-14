@@ -203,17 +203,32 @@ Ribcage = {
     });
   }
 
-, batchAppendSubviews: function (views, el, batchCount, callback){
-    _.chain(views)
-    .groupBy( function (view, index){
-      return Math.floor(index / batchCount);
-    })
-    .toArray()
-    .each( function (viewBatch){
-      this.appendSubviews(viewBatch, el, function (){
-        if (_.isFunction(callback)) callback(viewBatch);
+, batchAppendSubviews: function (views, el, batchCount, batchCallback, callback){
+    var self = this
+      , batches = _(views)
+                  .groupBy( function (view, index){
+                    return Math.floor(index / batchCount);
+                  })
+                  .toArray()
+                  .valueOf();
+
+    function appendNextBatch () {
+      if(!batches.length && typeof callback == 'function') {
+        return callback();
+      }
+
+      var viewBatch = batches.shift();
+
+      self.appendSubviews(viewBatch, el, function (){
+        if (typeof batchCallback == 'function') {
+          batchCallback(viewBatch);
+        }
+
+        appendNextBatch();
       });
-    }, this);
+    }
+
+    appendNextBatch();
   }
 
 , closeSubviews: function (){
