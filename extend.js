@@ -44,17 +44,6 @@ Ribcage = {
     return _.extend({}, this.options, this.model);
   }
 
-, close: function() {
-
-    if (this.beforeClose) {
-      this.beforeClose();
-    }
-
-    this.closeSubviews();
-    this.off();
-    this.remove();
-  }
-
 , render: function () {
     var self = this
       , model = this.model;
@@ -197,22 +186,54 @@ Ribcage = {
     });
   }
 
-, batchAppendSubviews: function (views, el, batchCount, callback){
-    _.chain(views)
-    .groupBy( function (view, index){
-      return Math.floor(index / batchCount);
-    })
-    .toArray()
-    .each( function (viewBatch){
-      this.appendSubviews(viewBatch, el, function (){
-        if (_.isFunction(callback)) callback(viewBatch);
+, batchAppendSubviews: function (views, el, batchCount, batchCallback, callback){
+    var self = this
+      , batches = _(views)
+                  .groupBy( function (view, index){
+                    return Math.floor(index / batchCount);
+                  })
+                  .toArray()
+                  .valueOf();
+
+    function appendNextBatch () {
+      if(!batches.length && typeof callback == 'function') {
+        return callback();
+      }
+
+      var viewBatch = batches.shift();
+
+      self.appendSubviews(viewBatch, el, function (){
+        if (typeof batchCallback == 'function') {
+          batchCallback(viewBatch);
+        }
+
+        appendNextBatch();
       });
-    }, this);
+    }
+
+    appendNextBatch();
   }
 
-, closeSubviews: function (){
+, close: function(options) {
+    if (this.beforeClose) {
+      this.beforeClose();
+    }
+
+    this.closeSubviews(options);
+    this.undelegateEvents();
+    this.stopListening();
+    if (!options.keepDom) this.remove();
+  }
+
+, closeSubviews: function (options){
+    // by default, we won't destroy the DOM elements of subviews
+    // b/c we can assume that removing the parent will remove the subview DOM
+    _.defaults(options, {
+      keepDom: true
+    })
+
     this.eachSubview( function (subview){
-      subview.close();
+      subview.close(options);
     });
 
     this.subviews = {};
@@ -238,7 +259,7 @@ Ribcage = {
     view.$el.detach();
   }
 
-, detachSubviewByModel: function (model){
+, _removeSubviewByModel: function _removeSubviewByModel(model, method){
     var id = model.id
     if (this.subviewByModelId){
       if (!id || !this.subviewByModelId[id]){
@@ -246,11 +267,20 @@ Ribcage = {
       }
 
       _.each(this.subviewByModelId[id], function(view){
-        this.detachSubview(view);
+        method(view);
       }, this);
 
       delete this.subviewByModelId[id];
     }
+
+  }
+
+, closeSubviewsByModel: function closeSubviewsByModel(model){
+    this._removeSubviewByModel(model, this.close)
+  }
+
+, detachSubviewByModel: function detachSubviewByModel(model){
+    this._removeSubviewByModel(model, this.detachSubview)
   }
 
 };//end Ribcage{}
