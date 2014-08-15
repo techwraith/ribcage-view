@@ -132,15 +132,14 @@ Ribcage = {
     this._attachSubView(view);
 
     if (view.options.render) view.render()
-    el.append(view.el);
 
-    _.defer(function (){
+    raf.call(window, function appendSubviewRaf(){
+      el.append(view.el);
       view.trigger('afterAppend', view);
-    });
-
-    if (view.afterAppend) {
-      view.afterAppend();
-    }
+      if (view.afterAppend) {
+        view.afterAppend();
+      }
+    })
   }
 
 , prependSubview: function (view, el){
@@ -149,15 +148,14 @@ Ribcage = {
     this._attachSubView(view);
 
     if (view.options.renderOnAppend) view.render()
-    el.prepend(view.el);
 
-    _.defer(function () {
-      view.trigger('afterPrepend', view);
-    });
-
-    if (view.afterPrepend) {
-      view.afterPrepend();
-    }
+    raf.call(window, function appendSubviewRaf(){
+      el.prepend(view.el);
+      view.trigger('afterAppend', view);
+      if (view.afterAppend) {
+        view.afterAppend();
+      }
+    })
   }
 
 , appendSubviews: function (views, el, callback){
