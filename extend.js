@@ -44,17 +44,6 @@ Ribcage = {
     return _.extend({}, this.options, this.model);
   }
 
-, close: function() {
-
-    if (this.beforeClose) {
-      this.beforeClose();
-    }
-
-    this.closeSubviews();
-    this.off();
-    this.remove();
-  }
-
 , render: function () {
     var self = this
       , model = this.model;
@@ -231,9 +220,24 @@ Ribcage = {
     appendNextBatch();
   }
 
-, closeSubviews: function (){
+, close: function(options) {
+    if (this.beforeClose) {
+      this.beforeClose();
+    }
+
+    this.closeSubviews(options);
+    if (!options.keepDom) this.remove();
+  }
+
+, closeSubviews: function (options){
+    // by default, we won't destroy the DOM elements of subviews
+    // b/c we can assume that removing the parent will remove the subview DOM
+    _.defaults(options, {
+      keepDom: true
+    })
+
     this.eachSubview( function (subview){
-      subview.close();
+      subview.close(options);
     });
 
     this.subviews = {};
