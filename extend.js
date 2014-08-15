@@ -60,12 +60,6 @@ Ribcage = {
       , model = this.model;
 
     if(typeof this.bindEvents === 'function') {
-      //Make sure we don't double up on event listeners
-      //You no longer have to manually stop listening on re-render -cstumph
-      _.each(this._listeners, function (emitter){
-        this.stopListening(emitter)
-      }, this)
-
       this.bindEvents()
     }
 
@@ -96,7 +90,7 @@ Ribcage = {
     }
 
     this.$el.html(this.template(model));
-    
+
     // As soon as the view is bound to DOM, we need to delegate events and re-render all
     // subviews to keep events intact. -cstumph
     this.delegateEvents()
