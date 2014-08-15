@@ -226,6 +226,8 @@ Ribcage = {
     }
 
     this.closeSubviews(options);
+    this.undelegateEvents();
+    this.stopListening();
     if (!options.keepDom) this.remove();
   }
 
