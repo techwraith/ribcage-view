@@ -214,26 +214,41 @@ Ribcage = {
     appendNextBatch();
   }
 
-, close: function(options) {
+, close: function(options, callback) {
+    options || (options = {})
+
     if (this.beforeClose) {
       this.beforeClose();
     }
 
-    this.closeSubviews(options);
+    this.closeSubviews(_.defaults({}, options, {keepDom: true}));
     this.undelegateEvents();
     this.stopListening();
-    if (!options.keepDom) this.remove();
+
+    if (!options.keepDom) {
+      raf.call(window, function closeRequestAnimationFrame(){
+        this.remove();
+        if (_.isFunction(callback)) callback()
+      }.bind(this))
+    }
+    else {
+      if (_.isFunction(callback)) callback()
+    }
   }
 
-, closeSubviews: function (options){
+, closeSubviews: function (options, callback){
+    var done = _.isFunction(callback)
+      ? _.after(_.size(this.subviews), callback)
+      : _.noop
+
     // by default, we won't destroy the DOM elements of subviews
     // b/c we can assume that removing the parent will remove the subview DOM
     _.defaults(options, {
-      keepDom: true
+      keepDom: false
     })
 
     this.eachSubview( function (subview){
-      subview.close(options);
+      subview.close(options, done);
     });
 
     this.subviews = {};

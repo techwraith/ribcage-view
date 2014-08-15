@@ -26,10 +26,12 @@ describe('A Simple View', function () {
     assert.equal(fixture.childNodes[0].innerHTML, '');
   });
 
-  it('should detach when closed', function () {
-    instances.viewInstance.close();
-    assert.equal(fixture.childNodes.length, 0);
-    assert.equal(fixture.innerHTML, '');
+  it('should detach when closed', function (done) {
+    instances.viewInstance.close(null, function(){
+      assert.equal(fixture.childNodes.length, 0);
+      assert.equal(fixture.innerHTML, '');
+      done()
+    });
   });
 
   delete instances.viewInstance;
@@ -51,10 +53,12 @@ describe('Extended Views', function () {
       assert.equal(fixture.childNodes[0].childNodes.length, 0);
     });
 
-    it('should detach when closed', function () {
-      instances.collectionInstance.close();
-      assert.equal(fixture.childNodes.length, 0);
-      assert.equal(fixture.innerHTML, '');
+    it('should detach when closed', function (done) {
+      instances.collectionInstance.close(null, function(){
+        assert.equal(fixture.childNodes.length, 0);
+        assert.equal(fixture.innerHTML, '');
+        done();
+      });
     });
 
     delete instances.collectionInstance;
@@ -75,10 +79,12 @@ describe('Extended Views', function () {
       assert.equal(fixture.childNodes[0].childNodes.length, 100);
     });
 
-    it('should detach when closed', function () {
-      instances.collectionInstance.close();
-      assert.equal(fixture.childNodes.length, 0);
-      assert.equal(fixture.innerHTML, '');
+    it('should detach when closed', function (done) {
+      instances.collectionInstance.close(null, function(){
+        assert.equal(fixture.childNodes.length, 0);
+        assert.equal(fixture.innerHTML, '');
+        done()
+      });
     });
 
     delete instances.collectionInstance;
@@ -170,7 +176,6 @@ describe('Events', function (){
 
     assert.equal(testView.clickCount, 1);
 
-    delete testView
     done()
   });
 
@@ -182,7 +187,6 @@ describe('Events', function (){
 
     assert.equal(testView.eSub.clickCount, 1);
 
-    delete testView
     done()
   });
 
@@ -195,7 +199,6 @@ describe('Events', function (){
 
     assert.equal(testView.clickCount, 1);
 
-    delete testView
     done()
   });
 
@@ -208,7 +211,6 @@ describe('Events', function (){
 
     assert.equal(testView.eSub.clickCount, 1);
 
-    delete testView
     done()
   });
 })
