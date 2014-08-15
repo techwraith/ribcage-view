@@ -78,25 +78,30 @@ Ribcage = {
       model = this.context();
     }
 
-    this.$el.html(this.template(model));
+    raf.call(window, function callAfterRender(){
+      self.$el.html(self.template(model));
 
-    // As soon as the view is bound to DOM, we need to delegate events and re-render all
-    // subviews to keep events intact. -cstumph
-    this.delegateEvents()
-    this.eachSubview( function eachSubviewInRender (view){
-      view.render()
-    })
+      // As soon as the view is bound to DOM, we need to delegate events and re-render all
+      // subviews to keep events intact. -cstumph
+      self.delegateEvents()
 
-    // I'm not happy deferring here, but backbone's
-    // event system is based on the DOM, so my hands
-    // are tied. - Daniel
-    _.defer(function () {
-      self.trigger('afterRender')
+      self.eachSubview(function eachSubviewInRender (view){
+        view.render()
+        self.listenToOnce(view, 'afterRender', done)
+      })
+
+      if (!_.size(this.subviews)) done()
     });
 
-    if (this.afterRender) {
-      this.afterRender();
+    function triggerAfterRender(){
+      self.trigger('afterRender')
+      console.log('done!!')
+
+      if (self.afterRender) {
+        self.afterRender();
+      }
     }
+    var done = this.subviews ? _.after(_.size(this.subviews), triggerAfterRender) : triggerAfterRender
 
     return this;
   }
@@ -126,7 +131,7 @@ Ribcage = {
     return view;
   }
 
-, appendSubview: function (view, el){
+, appendSubview: function (view, el, callback){
     el || (el = this.$el);
 
     this._attachSubView(view);
@@ -139,10 +144,11 @@ Ribcage = {
       if (view.afterAppend) {
         view.afterAppend();
       }
+      if (_.isFunction(callback)) callback(view)
     })
   }
 
-, prependSubview: function (view, el){
+, prependSubview: function (view, el, callback){
     el || (el = this.$el);
 
     this._attachSubView(view);
@@ -151,10 +157,11 @@ Ribcage = {
 
     raf.call(window, function appendSubviewRaf(){
       el.prepend(view.el);
-      view.trigger('afterAppend', view);
+      view.trigger('afterPrepend', view);
       if (view.afterAppend) {
         view.afterAppend();
       }
+      if (_.isFunction(callback)) callback(view)
     })
   }
 
@@ -194,14 +201,18 @@ Ribcage = {
                   .valueOf();
 
     function appendNextBatch () {
-      if(!batches.length && typeof callback == 'function') {
-        return callback();
+      console.log(batches.length)
+      if(!batches.length){
+        if (typeof callback === 'function') {
+          return callback();
+        }
+        return
       }
 
       var viewBatch = batches.shift();
 
       self.appendSubviews(viewBatch, el, function (){
-        if (typeof batchCallback == 'function') {
+        if (typeof batchCallback === 'function') {
           batchCallback(viewBatch);
         }
 
@@ -269,6 +280,8 @@ Ribcage = {
       delete this.subviews[view.cid];
     }
 
+    view.stopListening()
+    view.undelegateEvents()
     view.$el.detach();
   }
 
