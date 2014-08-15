@@ -216,7 +216,11 @@ describe('Events', function (){
 })
 
 describe('Memory Leaks', function () {
-  describe('CollectionView', function () {
+  // this test is useful only if you're manually playing in chrome dev tools
+  // or your name is @ben-ng.
+  // or you're a mad scientist
+  // mostly, you have to be @ben-ng.
+  describe.skip('CollectionView', function () {
     var cycles = 10
       , collectionsPerCycle = 10
       , itemsPerCollection = 10
