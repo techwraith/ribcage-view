@@ -259,7 +259,7 @@ Ribcage = {
     view.$el.detach();
   }
 
-, detachSubviewByModel: function (model){
+, _removeSubviewByModel: function _removeSubviewByModel(model, method){
     var id = model.id
     if (this.subviewByModelId){
       if (!id || !this.subviewByModelId[id]){
@@ -267,11 +267,20 @@ Ribcage = {
       }
 
       _.each(this.subviewByModelId[id], function(view){
-        this.detachSubview(view);
+        method(view);
       }, this);
 
       delete this.subviewByModelId[id];
     }
+
+  }
+
+, closeSubviewsByModel: function closeSubviewsByModel(model){
+    this._removeSubviewByModel(model, this.close)
+  }
+
+, detachSubviewByModel: function detachSubviewByModel(model){
+    this._removeSubviewByModel(model, this.detachSubview)
   }
 
 };//end Ribcage{}
