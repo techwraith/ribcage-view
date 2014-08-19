@@ -1,4 +1,5 @@
 /* globals mocha, describe, it, after, beforeEach */
+'use strict';
 
 var assert = require('assert')
   , View = require('../index')
@@ -267,8 +268,9 @@ describe('Memory Leaks', function () {
 
 // Need this to be leakproof
 after(function () {
-  for(var k in instances)
-    delete instances[k];
+  _.each(instances, function eachInstance(instance, key){
+    delete instances[key];
+  })
 });
 
 onload = function(){
