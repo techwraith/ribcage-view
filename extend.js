@@ -33,11 +33,22 @@ Ribcage = {
       this.template = function () { return ''; };
     }
 
-    if (this.afterInit) {
-      this.afterInit(opts);
+    if (!this._dataLoaded && typeof this.loadData === 'function') {
+      return this.loadData(_.bind(function () {
+        this._dataLoaded = true
+        if (this.afterInit) {
+          this.afterInit(opts);
+        }
+        this.render()
+      }, this))
     }
+    else {
+      if (this.afterInit) {
+        this.afterInit(opts);
+      }
 
-    this.render();
+      this.render();
+    }
   }
 
 , context: function () {
@@ -50,13 +61,6 @@ Ribcage = {
 
     if(typeof this.bindEvents === 'function') {
       this.bindEvents()
-    }
-
-    if (!this._dataLoaded && typeof this.loadData == 'function') {
-      return this.loadData(function () {
-        self._dataLoaded = true
-        self.render()
-      })
     }
 
     if (this.beforeRender) {
