@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('lodash')
   , raf = require('raf/polyfill')
   , Ribcage
@@ -9,7 +11,7 @@ Ribcage = {
     opts = opts || {};
 
     // if we need to load data before rendering, do it
-    if (typeof this.loadData == 'function') {
+    if (typeof this.loadData === 'function') {
       this._dataLoaded = false
     }
     // otherwise, assume we have the data already
@@ -52,7 +54,7 @@ Ribcage = {
       this.bindEvents()
     }
 
-    if (!this._dataLoaded && typeof this.loadData == 'function') {
+    if (!this._dataLoaded && typeof this.loadData === 'function') {
       return this.loadData(function () {
         self._dataLoaded = true
         self.render()
@@ -196,14 +198,14 @@ Ribcage = {
                   .valueOf();
 
     function appendNextBatch () {
-      if(!batches.length && typeof callback == 'function') {
+      if(!batches.length && typeof callback === 'function') {
         return callback();
       }
 
       var viewBatch = batches.shift();
 
       self.appendSubviews(viewBatch, el, function (){
-        if (typeof batchCallback == 'function') {
+        if (typeof batchCallback === 'function') {
           batchCallback(viewBatch);
         }
 
