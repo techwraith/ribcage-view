@@ -216,26 +216,31 @@ Ribcage = {
     appendNextBatch();
   }
 
-, close: function(options, callback) {
+, close: function close(options, callback) {
     options || (options = {})
 
     if (this.beforeClose) {
       this.beforeClose();
     }
 
-    this.closeSubviews(_.defaults({}, options, {keepDom: true}));
+    this.closeSubviews(_.defaults({}, options, {keepDom: true}), _.bind(function onSubviewsClosed(){
+      if (!options.keepDom) {
+        raf.call(window, function closeRequestAnimationFrame(){
+          // remove the from the DOM
+          this.$el.remove()
+          // destroy our reference to the DOM node
+          this.$el = null
+          this.el = null
+          if (_.isFunction(callback)) callback()
+        }.bind(this))
+      }
+      else {
+        if (_.isFunction(callback)) callback()
+      }
+    }, this));
     this.undelegateEvents();
     this.stopListening();
 
-    if (!options.keepDom) {
-      raf.call(window, function closeRequestAnimationFrame(){
-        this.remove();
-        if (_.isFunction(callback)) callback()
-      }.bind(this))
-    }
-    else {
-      if (_.isFunction(callback)) callback()
-    }
   }
 
 , closeSubviews: function (options, callback){
