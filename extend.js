@@ -254,6 +254,8 @@ Ribcage = {
       keepDom: false
     })
 
+    if (_.isEmpty(this.subviews)) return void callback()
+
     this.eachSubview( function (subview){
       subview.close(options, done);
     });
