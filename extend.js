@@ -111,8 +111,8 @@ Ribcage = {
     })
   }
 
-, eachSubview: function (iterator){
-    _.each(this.subviews, iterator);
+, eachSubview: function (iterator, context){
+    _.each(this.subviews, iterator, context || this);
   }
 
 , _attachSubView: function (view){
@@ -223,38 +223,36 @@ Ribcage = {
       this.beforeClose();
     }
 
-    this.closeSubviews(_.defaults({}, options, {keepDom: true}), _.bind(function onSubviewsClosed(){
+    this.closeSubviews({keepDom: true}, _.bind(function onSubviewsClosed(){
+      this.stopListening();
+
+      // when the subviews are closed, close the parent
+      // keep the DOM elements, b/c it's save to assume that all child DOM
+      // is containted by the parent DOM container. This allows us to reduce
+      // many DOM removal calls to just one.
       if (!options.keepDom) {
         raf.call(window, function closeRequestAnimationFrame(){
           // remove the from the DOM
-          this.$el.remove()
+          if (this.$el) this.$el.remove()
           // destroy our reference to the DOM node
           this.$el = null
           this.el = null
           if (_.isFunction(callback)) callback()
         }.bind(this))
       }
-      else {
-        if (_.isFunction(callback)) callback()
-      }
+      else if (_.isFunction(callback)) callback()
     }, this));
-    this.undelegateEvents();
-    this.stopListening();
-
   }
 
 , closeSubviews: function (options, callback){
-    var done = _.isFunction(callback)
-      ? _.after(_.size(this.subviews), callback)
-      : _.noop
+    var subviewCount = _.size(this.subviews)
+      , done
 
-    // by default, we won't destroy the DOM elements of subviews
-    // b/c we can assume that removing the parent will remove the subview DOM
-    _.defaults(options, {
-      keepDom: false
-    })
-
-    if (_.isEmpty(this.subviews)) return void callback()
+    if (_.isFunction(callback)){
+      // if there are no subviews to close, just call the callback
+      if (!subviewCount) return void callback()
+      else done = _.after(subviewCount, callback)
+    }
 
     this.eachSubview( function (subview){
       subview.close(options, done);
