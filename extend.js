@@ -258,7 +258,9 @@ Ribcage = {
       subview.close(options, done);
     });
 
-    this.subviews = {};
+    // empty out our lists of subviews
+    this.subviews = {}
+    this.subviewByModelId = {}
   }
 
 , detachSubview: function (view){
