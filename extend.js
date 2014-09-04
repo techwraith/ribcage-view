@@ -60,6 +60,11 @@ Ribcage = {
         self.render()
       })
     }
+    
+    // closing destroys the el, might need to recreate it
+    if (!this.el) {
+      this._ensureElement()
+    }    
 
     if (this.beforeRender) {
       this.beforeRender();
