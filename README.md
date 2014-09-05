@@ -3,7 +3,7 @@ ribcage-view
 
 A simple base Backbone view class that adds subviews, rendering, and initialization.
 
-<!-- MarkdownTOC depth=4 -->
+<!-- MarkdownTOC -->
 
 - [Install](#install)
 - [Usage](#usage)
@@ -11,22 +11,8 @@ A simple base Backbone view class that adds subviews, rendering, and initializat
   - [Full example](#full-example)
 - [Methods](#methods)
   - [Override with caution](#override-with-caution)
-    - [`initialize()`](#initialize)
-    - [`render()`](#render)
-    - [`close(](# options,  callback)
-    - [`closeSubviews(](# options,  callback)
-    - [`eachSubview( iterator](#,  context)
   - [Override at will](#override-at-will)
-    - [`context()`](#context)
   - [Helpers](#helpers)
-    - [`proxy( name,  view)`](#proxy-name--view)
-    - [`appendSubview( view](#,  el)
-    - [`prependSubview( view](#,  el)
-    - [`appendSubviews( views](#,  el,  callback)
-    - [`batchAppendSubviews( views,  el,  batchCount](#,  batchCallback,  callback)
-    - [`detachSubview( view)`](#detachsubview-view)
-    - [`closeSubviewsByModel( model)`](#closesubviewsbymodel-model)
-    - [`detachSubviewByModel( model)`](#detachsubviewbymodel-model)
 - [Gotchas](#gotchas)
 - [Contributing](#contributing)
   - [Developing](#developing)
@@ -182,6 +168,43 @@ These methods provide defaults, but you should feel free to replace them with yo
 
 #### `context()`
 Return an object for the template to use for its data. Defaults to the `options`.
+
+#### `beforeInit(<Object> options)`
+Called before anything else happens. Is passed the options from the constructor. This is a good place to instantiate a state model.
+
+#### `afterInit(<Object> options)`
+Called after all the initialization has completed. This is a good place to create subviews.
+
+#### `loadData(<Function> done)`
+If defined, will block rendering until `done` is called. Useful if you need to async load data from the server before _anything_ happens.
+
+#### `beforeRender()`
+Called after `loadData` but before anything else in the render flow.
+
+#### `afterRender()`
+Called after the render has happened. This is a good place to put subviews into the DOM.
+
+```js
+…
+, afterRender: function afterRender(){
+  this.appendSubview(this.mySubview)
+}
+…
+```
+
+#### `bindEvents()`
+Called on every render. This is the place to attach backbone events to subviews. Be sure you call `stopListening` before `listenTo` so that you don't create multiple listeners for the same event.
+
+```js
+…
+, bindEvents: function bindEvents(){
+  // always stopListening so we don't reattach multiple listeners
+  if (this.model) this.stopListening(this.model)
+
+  this.listenTo(this.model, 'change', this.render)
+}
+…
+```
 
 ### Helpers
 These are methods that assist with common tasks.
