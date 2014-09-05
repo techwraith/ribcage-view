@@ -3,7 +3,7 @@ ribcage-view
 
 A simple base Backbone view class that adds subviews, rendering, and initialization.
 
-<!-- MarkdownTOC depth=4 -->
+<!-- MarkdownTOC -->
 
 - [Install](#install)
 - [Usage](#usage)
@@ -11,28 +11,8 @@ A simple base Backbone view class that adds subviews, rendering, and initializat
   - [Full example](#full-example)
 - [Methods](#methods)
   - [Override with caution](#override-with-caution)
-    - [`initialize()`](#initialize)
-    - [`render()`](#render)
-    - [`close(](# options,  callback)
-    - [`closeSubviews(](# options,  callback)
-    - [`eachSubview( iterator](#,  context)
   - [Override at will](#override-at-will)
-    - [`context()`](#context)
-    - [`beforeInit( options)`](#beforeinit-options)
-    - [`afterInit( options)`](#afterinit-options)
-    - [`loadData( done)`](#loaddata-done)
-    - [`beforeRender()`](#beforerender)
-    - [`afterRender()`](#afterrender)
-    - [`bindEvents()`](#bindevents)
   - [Helpers](#helpers)
-    - [`proxy( name,  view)`](#proxy-name--view)
-    - [`appendSubview( view](#,  el)
-    - [`prependSubview( view](#,  el)
-    - [`appendSubviews( views](#,  el,  callback)
-    - [`batchAppendSubviews( views,  el,  batchCount](#,  batchCallback,  callback)
-    - [`detachSubview( view)`](#detachsubview-view)
-    - [`closeSubviewsByModel( model)`](#closesubviewsbymodel-model)
-    - [`detachSubviewByModel( model)`](#detachsubviewbymodel-model)
 - [Gotchas](#gotchas)
 - [Contributing](#contributing)
   - [Developing](#developing)
