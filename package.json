@@ -1,6 +1,6 @@
 {
   "name": "ribcage-view",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "A simple base Backbone view class that adds subviews, rendering, and initialization. ",
   "main": "index.js",
   "scripts": {
