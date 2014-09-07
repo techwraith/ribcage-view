@@ -20,7 +20,8 @@ Ribcage = {
     }
 
     this._nukeOnRender = opts._nukeOnRender
-    delete opts._nukeOnRender
+    // delete would turn this into a "slow object" in V8, so just set to null
+    opts._nukeOnRender = null
 
     // backbone 1.1+ doesn't auto-set this.options
     this.options = opts
@@ -60,11 +61,11 @@ Ribcage = {
         self.render()
       })
     }
-    
+
     // closing destroys the el, might need to recreate it
     if (!this.el) {
       this._ensureElement()
-    }    
+    }
 
     if (this.beforeRender) {
       this.beforeRender();
@@ -282,7 +283,8 @@ Ribcage = {
         throw new Error(msg)
       }
 
-      delete this.subviews[view.cid];
+      // delete would turn this into a "slow object" in V8, so just set to null
+      this.subviews[view.cid] = null
     }
 
     view.$el.detach();
@@ -299,7 +301,8 @@ Ribcage = {
         method(view);
       }, this);
 
-      delete this.subviewByModelId[id];
+      // delete would turn this into a "slow object" in V8, so just set to null
+      this.subviewByModelId[id] = null
     }
 
   }
