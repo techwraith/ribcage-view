@@ -6,6 +6,7 @@ var assert = require('assert')
   , CollectionView = require('./fixtures/CollectionView')
   , ButtonHolderView = require('./fixtures/ButtonHolderView')
   , EventViews       = require('./fixtures/EventViews')
+  , Backbone = require('backbone')
   , _ = require('lodash')
   , instances = {}; // A temporary holder that we can `delete` to clear leaks
 
@@ -108,7 +109,7 @@ describe('CollectionView with subviews that have models', function(){
   });
 
   it('can detach a subview by model', function(){
-    parent.detachSubviewByModel({id: 1});
+    parent.detachSubviewByModel.call(parent, new Backbone.Model({id: 1}))
 
     assert.equal(parent.subviewByModelId[1], null);
   });
