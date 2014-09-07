@@ -204,8 +204,12 @@ Ribcage = {
                   .valueOf();
 
     function appendNextBatch () {
-      if(!batches.length && typeof callback === 'function') {
-        return callback();
+      // with no batches left, just return early
+      if(!batches.length) {
+        // if we have a final callback, call that.
+        return typeof callback === 'function'
+          ? void callback()
+          : void 0
       }
 
       var viewBatch = batches.shift();

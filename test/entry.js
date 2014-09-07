@@ -141,7 +141,7 @@ describe('#batchAppendSubviews', function(){
   var parent
     , subviews
     , batchCount = 10
-    , totalCount = 20
+    , totalCount = 30
     ;
 
   beforeEach(function(){
@@ -155,16 +155,23 @@ describe('#batchAppendSubviews', function(){
   })
 
   it('appends views in batches', function(done){
-    var end = _.after(totalCount / batchCount, done)
-      , batchIndex = 0
-      ;
-
-    parent.batchAppendSubviews(subviews, null, batchCount, function(){
-      batchIndex++;
-      assert.equal(parent.$('li').length, batchCount * batchIndex);
-      end();
+    parent.batchAppendSubviews(subviews, null, batchCount, null, function(){
+      assert.equal(parent.$('li').length, totalCount);
+      done()
     })
   });
+
+  it('calls the batch callback on each batch render', function (done){
+    var end = _.after(totalCount / batchCount, done)
+      , batchNumber = 0
+
+    parent.batchAppendSubviews(subviews, null, batchCount, function(){
+      batchNumber++
+
+      assert.equal(parent.$('li').length, batchCount * batchNumber);
+      end()
+    })
+  })
 });
 
 
