@@ -110,7 +110,7 @@ describe('CollectionView with subviews that have models', function(){
   it('can detach a subview by model', function(){
     parent.detachSubviewByModel({id: 1});
 
-    assert.equal(parent.subviewByModelId[1], undefined);
+    assert.equal(parent.subviewByModelId[1], null);
   });
 });
 
