@@ -269,7 +269,7 @@ Ribcage = {
     this.subviewByModelId = {}
   }
 
-, detachSubview: function (view){
+, detachSubview: function detachSubview(view){
     var msg
 
     if (this.subviews) {
@@ -298,7 +298,7 @@ Ribcage = {
       }
 
       _.each(this.subviewByModelId[id], function(view){
-        method(view);
+        method.call(this, view);
       }, this);
 
       // delete would turn this into a "slow object" in V8, so just set to null
