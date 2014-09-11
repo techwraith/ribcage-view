@@ -120,7 +120,8 @@ Ribcage = {
   }
 
 , eachSubview: function (iterator, context){
-    _.each(this.subviews, iterator, context || this);
+    // filter will remove all subview keys that are `null`
+    _(this.subviews).filter().each(iterator, context || this);
   }
 
 , _attachSubView: function (view){
