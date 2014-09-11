@@ -20,8 +20,10 @@ Ribcage = {
     }
 
     this._nukeOnRender = opts._nukeOnRender
-    // delete would turn this into a "slow object" in V8, so just set to null
-    opts._nukeOnRender = null
+    // delete would turn this into a "slow object" in V8
+    // however, leaving setting it to null makes subclassed states
+    // throw if extraProperties is set to deny
+    delete opts._nukeOnRender
 
     // backbone 1.1+ doesn't auto-set this.options
     this.options = opts
