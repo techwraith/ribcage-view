@@ -120,8 +120,7 @@ Ribcage = {
   }
 
 , eachSubview: function (iterator, context){
-    // filter will remove all subview keys that are `null`
-    _(this.subviews).filter().each(iterator, context || this);
+    _.each(this.subviews, iterator, context || this);
   }
 
 , _attachSubView: function (view){
@@ -290,8 +289,10 @@ Ribcage = {
         throw new Error(msg)
       }
 
-      // delete would turn this into a "slow object" in V8, so just set to null
-      this.subviews[view.cid] = null
+      // delete makes this into a "slow object" in V8
+      // but that's okay b/c any perf gains we'd get would be lost by having to
+      // itterate over subviews to remove falsey values.
+      delete this.subviews[view.cid]
     }
 
     view.$el.detach();
