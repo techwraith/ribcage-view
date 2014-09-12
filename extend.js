@@ -124,13 +124,19 @@ Ribcage = {
   }
 
 , _attachSubView: function (view){
+    var viewId
+
     this.subviews = this.subviews || {};
     this.subviewByModelId = this.subviewByModelId || {};
 
     this.subviews[view.cid] = view;
+
     if (view.model) {
-      if (!this.subviewByModelId[view.model.id]) this.subviewByModelId[view.model.id] = [];
-      this.subviewByModelId[view.model.id].push(view);
+      viewId = view.model.id || view.model.cid
+      if (!this.subviewByModelId[viewId])
+        this.subviewByModelId[viewId] = [];
+
+      this.subviewByModelId[viewId].push(view);
     }
 
     return view;
