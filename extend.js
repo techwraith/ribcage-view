@@ -46,7 +46,10 @@ Ribcage = {
   }
 
 , context: function () {
-    return _.extend({}, this.options, this.model);
+    var model = this.model ? this.model.toJSON() : {}
+      , state = this.state ? this.state.toJSON() : {}
+
+    return _.extend({}, this.options, model, state)
   }
 
 , render: function () {
