@@ -1,67 +1,59 @@
-'use strict';
+'use strict'
 
 var _ = require('lodash')
   , raf = require('raf/polyfill')
   , Ribcage
-  , extendView;
+  , extendView
 
 Ribcage = {
-  initialize: function (opts){
+  initialize: function initialize(opts){
 
-    opts = opts || {};
+    opts = opts || {}
 
     // if we need to load data before rendering, do it
-    if (typeof this.loadData === 'function') {
-      this._dataLoaded = false
-    }
     // otherwise, assume we have the data already
-    else {
-      this._dataLoaded = true
-    }
+    this._dataLoaded = typeof this.loadData !== 'function'
 
     this._nukeOnRender = opts._nukeOnRender
     // delete would turn this into a "slow object" in V8
     // we can't set to null, b/c a state model can reject extra properties
-    if (_.has(opts, '_nukeOnRender'))
-      opts = _.omit(opts, '_nukeOnRender')
+    if (_.has(opts, '_nukeOnRender')) opts = _.omit(opts, '_nukeOnRender')
 
     // backbone 1.1+ doesn't auto-set this.options
     this.options = opts
 
-    if(this.beforeInit) {
-      this.beforeInit(opts);
-    }
+    if (this.beforeInit) this.beforeInit(opts)
 
-    this.template = this.template || opts.template;
+    this.template = this.template || opts.template
 
     if (!this.template) {
-      this.template = function () { return ''; };
+      this.template = function template(){
+        return ''
+      }
     }
 
-    if (this.afterInit) {
-      this.afterInit(opts);
-    }
+    if (this.afterInit) this.afterInit(opts)
 
-    this.render();
+    this.render()
   }
 
-, context: function () {
+, context: function context() {
     var model = this.model ? this.model.toJSON() : {}
       , state = this.state ? this.state.toJSON() : {}
 
     return _.extend({}, this.options, model, state)
   }
 
-, render: function () {
+, render: function context() {
     var self = this
-      , model = this.model;
+      , model = this.model
 
     if(typeof this.bindEvents === 'function') {
       this.bindEvents()
     }
 
     if (!this._dataLoaded && typeof this.loadData === 'function') {
-      return this.loadData(function () {
+      return this.loadData(function dataLoaded() {
         self._dataLoaded = true
         self.render()
       })
@@ -73,182 +65,181 @@ Ribcage = {
     }
 
     if (this.beforeRender) {
-      this.beforeRender();
+      this.beforeRender()
     }
 
     // Maintainers of legacy code might want to use this
     // but certainly not YOU, young grasshopper!
     if (this._nukeOnRender) {
-      this.closeSubviews();
-      this.$el.empty();
+      this.closeSubviews()
+      this.$el.empty()
     }
 
     if (this.beforeTemplating) {
-      model = this.beforeTemplating();
+      model = this.beforeTemplating()
     }
 
     if (this.context) {
-      model = this.context();
+      model = this.context()
     }
 
-    this.$el.html(this.template(model));
+    this.$el.html(this.template(model))
 
     // As soon as the view is bound to DOM, we need to delegate events and re-render all
     // subviews to keep events intact. -cstumph
     this.delegateEvents()
-    this.eachSubview( function eachSubviewInRender (view){
+    this.eachSubview(function eachSubviewInRender (view){
       view.render()
     })
 
     // I'm not happy deferring here, but backbone's
     // event system is based on the DOM, so my hands
     // are tied. - Daniel
-    _.defer(function () {
+    _.defer(function deferSoTheDOMCanCatchup() {
       self.trigger('afterRender')
-    });
+    })
 
     if (this.afterRender) {
-      this.afterRender();
+      this.afterRender()
     }
 
-    return this;
+    return this
   }
 
-, proxy: function (name, view){
+, proxy: function proxy(name, view){
     this.listenTo(view, name, function proxiedEventCallback(){
-      var args = Array.prototype.slice.call(arguments, 0);
-      args.splice(0, 0, name);
-      this.trigger.apply(this, args);
+      var args = Array.prototype.slice.call(arguments, 0)
+      args.splice(0, 0, name)
+      this.trigger.apply(this, args)
     })
   }
 
-, eachSubview: function (iterator, context){
-    _.each(this.subviews, iterator, context || this);
+, eachSubview: function eachSubview(iterator, context){
+    _.each(this.subviews, iterator, context || this)
   }
 
-, _attachSubView: function (view){
+, _attachSubView: function _attachSubView(view){
     var viewId
 
-    this.subviews = this.subviews || {};
-    this.subviewByModelId = this.subviewByModelId || {};
+    this.subviews = this.subviews || {}
+    this.subviewByModelId = this.subviewByModelId || {}
 
-    this.subviews[view.cid] = view;
+    this.subviews[view.cid] = view
 
     if (view.model) {
       viewId = view.model.id || view.model.cid
-      if (!this.subviewByModelId[viewId])
-        this.subviewByModelId[viewId] = [];
+      if (!this.subviewByModelId[viewId]) this.subviewByModelId[viewId] = []
 
-      this.subviewByModelId[viewId].push(view);
+      this.subviewByModelId[viewId].push(view)
     }
 
-    return view;
+    return view
   }
 
-, appendSubview: function (view, el){
-    el || (el = this.$el);
+, appendSubview: function appendSubview(view, el){
+    el || (el = this.$el)
 
-    this._attachSubView(view);
+    this._attachSubView(view)
 
     // closing a view will remove the el, so ensure we have one before re-attaching
     if (view.options.render || !view.el) view.render()
-    el.append(view.el);
+    el.append(view.el)
 
-    _.defer(function (){
-      view.trigger('afterAppend', view);
-    });
+    _.defer(function deferSoTheDOMCanCatchup(){
+      view.trigger('afterAppend', view)
+    })
 
     if (view.afterAppend) {
-      view.afterAppend();
+      view.afterAppend()
     }
   }
 
-, prependSubview: function (view, el){
-    el || (el = this.$el);
+, prependSubview: function prependSubview(view, el){
+    el || (el = this.$el)
 
-    this._attachSubView(view);
+    this._attachSubView(view)
 
     // closing a view will remove the el, so ensure we have one before re-attaching
     if (view.options.renderOnAppend || !view.el) view.render()
-    el.prepend(view.el);
+    el.prepend(view.el)
 
-    _.defer(function () {
-      view.trigger('afterPrepend', view);
-    });
+    _.defer(function deferSoTheDOMCanCatchup() {
+      view.trigger('afterPrepend', view)
+    })
 
     if (view.afterPrepend) {
-      view.afterPrepend();
+      view.afterPrepend()
     }
   }
 
-, appendSubviews: function (views, el, callback){
-    el || (el = this.$el);
+, appendSubviews: function appendSubviews(views, el, callback){
+    var fragment = document.createDocumentFragment()
 
-    var fragment = document.createDocumentFragment();
+    el || (el = this.$el)
 
-    _.each(views, function(view){
-      this._attachSubView(view);
+    _.each(views, function appendEachView(view){
+      this._attachSubView(view)
 
       // closing a view will remove the el, so ensure we have one before re-attaching
       if (view.options.renderOnAppend || !view.el) view.render()
-      fragment.appendChild(view.el);
+      fragment.appendChild(view.el)
 
-      _.defer(function () {
-        view.trigger('afterAppend', view);
-      });
+      _.defer(function deferSoTheDOMCanCatchup() {
+        view.trigger('afterAppend', view)
+      })
 
       if (view.afterAppend) {
-        view.afterAppend();
+        view.afterAppend()
       }
-    }, this);
+    }, this)
 
-    raf.call(window, function(){
-      el[0].appendChild(fragment);
-      if (_.isFunction(callback)) callback(views);
-    });
+    raf.call(window, function onFrame(){
+      el[0].appendChild(fragment)
+      if (_.isFunction(callback)) callback(views)
+    })
   }
 
-, batchAppendSubviews: function (views, el, batchCount, batchCallback, callback){
+, batchAppendSubviews: function batchAppendSubviews(views, el, batchCount, batchCallback, callback){
     var self = this
       , batches = _(views)
-                  .groupBy( function (view, index){
-                    return Math.floor(index / batchCount);
+                  .groupBy(function groupIntoBatches(view, index){
+                    return Math.floor(index / batchCount)
                   })
                   .toArray()
-                  .valueOf();
+                  .valueOf()
 
     function appendNextBatch () {
+      var batchesLeft = batches.length
+        , viewBatch = batchesLeft ? batches.shift() : false
+
       // with no batches left, just return early
-      if(!batches.length) {
+      if(!batchesLeft) {
         // if we have a final callback, call that.
         return typeof callback === 'function'
           ? void callback()
           : void 0
       }
 
-      var viewBatch = batches.shift();
 
-      self.appendSubviews(viewBatch, el, function (){
+      this.appendSubviews(viewBatch, el, function subviewsAppended(){
         if (typeof batchCallback === 'function') {
-          batchCallback(viewBatch);
+          batchCallback(viewBatch)
         }
 
-        appendNextBatch();
-      });
+        appendNextBatch()
+      })
     }
 
-    appendNextBatch();
+    appendNextBatch()
   }
 
 , close: function close(options, callback) {
     options || (options = {})
 
-    if (this.beforeClose) {
-      this.beforeClose();
-    }
+    if (this.beforeClose) this.beforeClose()
 
     this.closeSubviews({keepDom: true}, _.bind(function onSubviewsClosed(){
-      this.stopListening();
+      this.stopListening()
 
       // when the subviews are closed, close the parent
       // keep the DOM elements, b/c it's save to assume that all child DOM
@@ -265,10 +256,10 @@ Ribcage = {
         }.bind(this))
       }
       else if (_.isFunction(callback)) callback()
-    }, this));
+    }, this))
   }
 
-, closeSubviews: function (options, callback){
+, closeSubviews: function closeSubviews(options, callback){
     var subviewCount = _.size(this.subviews)
       , done
 
@@ -278,9 +269,9 @@ Ribcage = {
       else done = _.after(subviewCount, callback)
     }
 
-    this.eachSubview( function (subview){
-      subview.close(options, done);
-    });
+    this.eachSubview(function closeEachSubview(subview){
+      subview.close(options, done)
+    })
 
     // empty out our lists of subviews
     this.subviews = {}
@@ -295,8 +286,7 @@ Ribcage = {
       if (view && !this.subviews[view.cid]) {
         msg = 'View not found in ' + this.className + '\'s subviews: ' + view.className
 
-        if(view.model)
-          msg += '\n\n'+ view.model.toJSON()
+        if(view.model) msg += '\n\n'+ view.model.toJSON()
 
         throw new Error(msg)
       }
@@ -307,19 +297,19 @@ Ribcage = {
       delete this.subviews[view.cid]
     }
 
-    view.$el.detach();
+    view.$el.detach()
   }
 
 , _removeSubviewByModel: function _removeSubviewByModel(model, method){
     var id = model.id
     if (this.subviewByModelId){
       if (!id || !this.subviewByModelId[id]){
-        throw new Error('No views with ' + id + ' model id found in ' + this.className + ' subviews');
+        throw new Error('No views with ' + id + ' model id found in ' + this.className + ' subviews')
       }
 
-      _.each(this.subviewByModelId[id], function(view){
-        method.call(this, view);
-      }, this);
+      _.each(this.subviewByModelId[id], function eachSubviewById(view){
+        method.call(this, view)
+      }, this)
 
       // delete would turn this into a "slow object" in V8, so just set to null
       this.subviewByModelId[id] = null
@@ -335,10 +325,10 @@ Ribcage = {
     this._removeSubviewByModel(model, this.detachSubview)
   }
 
-};//end Ribcage{}
+}//end Ribcage{}
 
-extendView = function (view){
-  return view.extend(Ribcage);
-};
+extendView = function extendView(view){
+  return view.extend(Ribcage)
+}
 
-module.exports = extendView;
+module.exports = extendView
