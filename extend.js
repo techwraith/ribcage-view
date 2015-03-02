@@ -221,7 +221,7 @@ Ribcage = {
       }
 
 
-      this.appendSubviews(viewBatch, el, function subviewsAppended(){
+      self.appendSubviews(viewBatch, el, function subviewsAppended(){
         if (typeof batchCallback === 'function') {
           batchCallback(viewBatch)
         }
