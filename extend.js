@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var _ = require('lodash')
   , raf = require('raf/polyfill')
@@ -37,23 +37,23 @@ Ribcage = {
     this.render()
   }
 
-, context: function context() {
+, context: function context(){
     var model = this.model ? this.model.toJSON() : {}
       , state = this.state ? this.state.toJSON() : {}
 
     return _.extend({}, this.options, model, state)
   }
 
-, render: function context() {
+, render: function render(){
     var self = this
       , model = this.model
 
-    if(typeof this.bindEvents === 'function') {
+    if (typeof this.bindEvents === 'function') {
       this.bindEvents()
     }
 
     if (!this._dataLoaded && typeof this.loadData === 'function') {
-      return this.loadData(function dataLoaded() {
+      return this.loadData(function dataLoaded(){
         self._dataLoaded = true
         self.render()
       })
@@ -88,14 +88,14 @@ Ribcage = {
     // As soon as the view is bound to DOM, we need to delegate events and re-render all
     // subviews to keep events intact. -cstumph
     this.delegateEvents()
-    this.eachSubview(function eachSubviewInRender (view){
+    this.eachSubview(function eachSubviewInRender(view){
       view.render()
     })
 
     // I'm not happy deferring here, but backbone's
     // event system is based on the DOM, so my hands
     // are tied. - Daniel
-    _.defer(function deferSoTheDOMCanCatchup() {
+    _.defer(function deferSoTheDOMCanCatchup(){
       self.trigger('afterRender')
     })
 
@@ -163,7 +163,7 @@ Ribcage = {
     if (view.options.renderOnAppend || !view.el) view.render()
     el.prepend(view.el)
 
-    _.defer(function deferSoTheDOMCanCatchup() {
+    _.defer(function deferSoTheDOMCanCatchup(){
       view.trigger('afterPrepend', view)
     })
 
@@ -184,7 +184,7 @@ Ribcage = {
       if (view.options.renderOnAppend || !view.el) view.render()
       fragment.appendChild(view.el)
 
-      _.defer(function deferSoTheDOMCanCatchup() {
+      _.defer(function deferSoTheDOMCanCatchup(){
         view.trigger('afterAppend', view)
       })
 
@@ -208,18 +208,17 @@ Ribcage = {
                   .toArray()
                   .valueOf()
 
-    function appendNextBatch () {
+    function appendNextBatch(){
       var batchesLeft = batches.length
         , viewBatch = batchesLeft ? batches.shift() : false
 
       // with no batches left, just return early
-      if(!batchesLeft) {
+      if (!batchesLeft) {
         // if we have a final callback, call that.
         return typeof callback === 'function'
           ? void callback()
           : void 0
       }
-
 
       self.appendSubviews(viewBatch, el, function subviewsAppended(){
         if (typeof batchCallback === 'function') {
@@ -233,7 +232,7 @@ Ribcage = {
     appendNextBatch()
   }
 
-, close: function close(options, callback) {
+, close: function close(options, callback){
     options || (options = {})
 
     if (this.beforeClose) this.beforeClose()
@@ -286,7 +285,7 @@ Ribcage = {
       if (view && !this.subviews[view.cid]) {
         msg = 'View not found in ' + this.className + '\'s subviews: ' + view.className
 
-        if(view.model) msg += '\n\n'+ view.model.toJSON()
+        if (view.model) msg += '\n\n' + view.model.toJSON()
 
         throw new Error(msg)
       }
@@ -325,7 +324,7 @@ Ribcage = {
     this._removeSubviewByModel(model, this.detachSubview)
   }
 
-}//end Ribcage{}
+} // end Ribcage{}
 
 extendView = function extendView(view){
   return view.extend(Ribcage)
