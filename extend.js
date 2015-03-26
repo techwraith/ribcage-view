@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 var _ = require('lodash')
   , raf = require('raf/polyfill')
@@ -207,8 +207,7 @@ Ribcage = {
                   })
                   .toArray()
                   .valueOf()
-
-    function appendNextBatch(){
+      , appendNextBatch = function appendNextBatch(){
       var batchesLeft = batches.length
         , viewBatch = batchesLeft ? batches.shift() : false
 
@@ -281,7 +280,6 @@ Ribcage = {
     var msg
 
     if (this.subviews) {
-
       if (view && !this.subviews[view.cid]) {
         msg = 'View not found in ' + this.className + '\'s subviews: ' + view.className
 
@@ -301,6 +299,7 @@ Ribcage = {
 
 , _removeSubviewByModel: function _removeSubviewByModel(model, method){
     var id = model.id
+
     if (this.subviewByModelId){
       if (!id || !this.subviewByModelId[id]){
         throw new Error('No views with ' + id + ' model id found in ' + this.className + ' subviews')
@@ -313,7 +312,6 @@ Ribcage = {
       // delete would turn this into a "slow object" in V8, so just set to null
       this.subviewByModelId[id] = null
     }
-
   }
 
 , closeSubviewsByModel: function closeSubviewsByModel(model){
@@ -324,7 +322,7 @@ Ribcage = {
     this._removeSubviewByModel(model, this.detachSubview)
   }
 
-} // end Ribcage{}
+}
 
 extendView = function extendView(view){
   return view.extend(Ribcage)
