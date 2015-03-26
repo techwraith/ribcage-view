@@ -120,6 +120,7 @@ Ribcage = {
 , _attachSubView: function _attachSubView(view){
     var viewId
 
+    if (!view) throw new Error('view must be passed.')
     this.subviews = this.subviews || {}
     this.subviewByModelId = this.subviewByModelId || {}
 
