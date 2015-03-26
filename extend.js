@@ -142,7 +142,7 @@ Ribcage = {
     this._attachSubView(view)
 
     // closing a view will remove the el, so ensure we have one before re-attaching
-    if (view.options.render || !view.el) view.render()
+    if (view.options.renderOnAppend || !view.el) view.render()
     el.append(view.el)
 
     _.defer(function deferSoTheDOMCanCatchup(){
