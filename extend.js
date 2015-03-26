@@ -142,7 +142,7 @@ Ribcage = {
     this._attachSubView(view)
 
     // closing a view will remove the el, so ensure we have one before re-attaching
-    if (view.options.renderOnAppend || !view.el) view.render()
+    if (view.options && view.options.renderOnAppend || !view.el) view.render()
     el.append(view.el)
 
     _.defer(function deferSoTheDOMCanCatchup(){
@@ -160,7 +160,7 @@ Ribcage = {
     this._attachSubView(view)
 
     // closing a view will remove the el, so ensure we have one before re-attaching
-    if (view.options.renderOnAppend || !view.el) view.render()
+    if (view.options && view.options.renderOnAppend || !view.el) view.render()
     el.prepend(view.el)
 
     _.defer(function deferSoTheDOMCanCatchup(){
@@ -181,7 +181,7 @@ Ribcage = {
       this._attachSubView(view)
 
       // closing a view will remove the el, so ensure we have one before re-attaching
-      if (view.options.renderOnAppend || !view.el) view.render()
+      if (view.options && view.options.renderOnAppend || !view.el) view.render()
       fragment.appendChild(view.el)
 
       _.defer(function deferSoTheDOMCanCatchup(){
