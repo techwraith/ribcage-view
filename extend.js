@@ -1,13 +1,12 @@
 'use strict'
 
 var _ = require('lodash')
-  , raf = require('raf/polyfill')
+  , raf = require('raf')
   , Ribcage
   , extendView
 
 Ribcage = {
   initialize: function initialize(opts){
-
     opts = opts || {}
 
     // if we need to load data before rendering, do it
@@ -193,7 +192,7 @@ Ribcage = {
       }
     }, this)
 
-    raf.call(window, function onFrame(){
+    raf(function onFrame(){
       el[0].appendChild(fragment)
       if (_.isFunction(callback)) callback(views)
     })
@@ -244,7 +243,7 @@ Ribcage = {
       // is containted by the parent DOM container. This allows us to reduce
       // many DOM removal calls to just one.
       if (!options.keepDom) {
-        raf.call(window, function closeRequestAnimationFrame(){
+        raf(function onFrame(){
           // remove the from the DOM
           if (this.$el) this.$el.remove()
           // destroy our reference to the DOM node
